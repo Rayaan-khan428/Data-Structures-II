@@ -152,11 +152,14 @@ TNODE *iterative_dfs(TNODE *root, int val) {
   // as long as stack isn't empty
   while (s.top) {
     TNODE *node = (TNODE *) pop(&s); // pop top item of off stack
-    push(&s, node->left);
-    push(&s, node->right);
+    
+    push(&s, node->left); // add its children to the stack
+    push(&s, node->right); // add its children to the stack
+    
     if (node->data == val) {
       return node;
     }
+
   }
   return NULL;
 }
