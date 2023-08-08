@@ -27,7 +27,6 @@ void printtabs(int numtabs) {
         printf("\t");
     }
     
-
 }
 
 /* PreOrder Traversal */
