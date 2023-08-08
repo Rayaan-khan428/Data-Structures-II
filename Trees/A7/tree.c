@@ -77,30 +77,89 @@ void display_inorder(TNODE *root) {
 
 /* this displays the node data of the tree in post-order. */
 void display_postorder(TNODE *root) {
+
     // your implementation
+    if (root) {
+
+      display_postorder(root->left);
+      display_postorder(root->right);
+      printf("%d", root->data);
+
+    }
 
 }
 
 /* this displays the tree in breadth-first-order using an auxiliary queue. */ 
 /* use auxiliary queue data structure for the algorithm  */
 void display_bforder(TNODE *root) {
+
     // your implementation
+    QUEUE q = {0};
+
+    // step 1: Add the original node to the queue
+    enqueue(&q, root);
+
+    // while there is 1 item in the queue
+    while (q.front) {
+      // Create a new node with the node you just dequeued from the queue
+      TNODE *node = (TNODE *) dequeue(&q);
+
+      // Add the left and right children of the node to the queue
+      enqueue(&q, node->left);
+      enqueue(&q, node->right);
+
+      // print the data
+      pritf("%c ", node->data);
+
+    }
 
 }
 
 /* this does the breadth-first-search using an auxiliary queue. */
 /* use auxiliary queue data structure for the algorithm  */
 TNODE *iterative_bfs(TNODE *root, int val) {
+    
     // your implementation
+
+    QUEUE q =  {0}; // initialize an empty queue obj
+    enqueue(&q, root);
+
+    while (q.front) { // while there is more than one item
+      
+      
+      TNODE *node = (TNODE *) dequeue(&q); // dequeue and store in node
+      enqueue(&q, node->left); // queue left child
+      enqueue(&q, node->right); // queue right child
+
+      // if match then return the node, if not, loop again
+      if (node->data == val) {
+        return node;
+      }
+
+    }
 
 }
 
 /* this does the depth-first-search using an auxiliary stack */
 TNODE *iterative_dfs(TNODE *root, int val) {
-    // your implementation
 
+  // your implementation
+  STACK s = {0};
+
+  // add the root
+  push(&s, root);
+
+  // as long as stack isn't empty
+  while (s.top) {
+    TNODE *node = (TNODE *) pop(&s); // pop top item of off stack
+    push(&s, node->left);
+    push(&s, node->right);
+    if (node->data == val) {
+      return node;
+    }
+  }
+  return NULL;
 }
-
 
 // the following functions are given, need to add to your program.
 void clean_tree(TNODE **rootp) {
