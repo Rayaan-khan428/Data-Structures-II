@@ -126,7 +126,6 @@ TNODE *iterative_bfs(TNODE *root, int val) {
 
     while (q.front) { // while there is more than one item
       
-      
       TNODE *node = (TNODE *) dequeue(&q); // dequeue and store in node
       enqueue(&q, node->left); // queue left child
       enqueue(&q, node->right); // queue right child

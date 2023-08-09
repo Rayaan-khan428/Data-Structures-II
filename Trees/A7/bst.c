@@ -92,7 +92,11 @@ void insert(TNODE **rootp, char *name, float score) {
 }
 
 void delete(TNODE **rootp, char *name) {
+    
     // your implementation
+    
+
+
 }
 
 
