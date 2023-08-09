@@ -92,23 +92,90 @@ void insert(TNODE **rootp, char *name, float score) {
 }
 
 void delete(TNODE **rootp, char *name) {
-    
-    // your implementation
-    
 
+    if (!*rootp) {
+        return; // If the root pointer is empty, there is no tree to delete from, so return.
+    }     
 
-}
+    TNODE *parent = NULL;
+    TNODE *current = *rootp;
 
+    while (current) {
 
-TNODE *new_node(char *name, float score) {
-  TNODE *np = (TNODE *) malloc(sizeof(TNODE));
-  if (np) {
-    strcpy(np->data.name, name);
-    np->data.score = score;
-    np->left = NULL;
-    np->right = NULL;
-  }
-  return np;
+        if (strcmp(current->data.name, name) < 0) {
+            parent = current;
+            current = current->right;
+        } else if (strcmp(current->data.name, name) > 0) {
+            parent = current;
+            current = current->left;
+        } else {
+            // Node to be deleted found
+            break;
+        }
+        
+    }
+
+    if (!current) {
+        return; // Node with given name not found
+    }
+
+    if (current->left == NULL && current->right == NULL) {
+        if (!parent) {
+            *rootp = NULL;
+        } else {
+            if (parent->left == current) { 
+                parent->left = NULL;
+            } else {
+                parent->right = NULL;
+            }
+        }
+        free(current);
+        current = NULL; // Prevent dangling pointer
+    } else if ((current->left) != (current->right)) {
+        TNODE *child;
+        if (current->left == NULL) {
+            child = current->right;
+        } else {
+            child = current->left;
+        }
+        if (!parent) {
+            *rootp = child;
+        } else {
+            if (parent->left == current) {
+                parent->left = child;
+            } else {
+                parent->right = child;
+            }
+        }
+        free(current);
+        current = NULL; // Prevent dangling pointer
+    } else {
+        TNODE *minNode = extract_smallest_node(&(current->right));
+
+        // If the left child is the minimum of the two 
+        if (current->right == minNode) {
+            minNode->left = current->left;
+            minNode->right = current->right;
+        } 
+        
+        // If the right child is the min of the two
+        else {
+            minNode->left = current->left;
+            minNode->right = current->right;
+        }
+
+        if (!parent) {
+            *rootp = minNode;
+        } else {
+            if (parent->left == current) {
+                parent->left = minNode;
+            } else {
+                parent->right = minNode;
+            }
+        }
+        free(current);
+        current = NULL; // Prevent dangling pointer
+    }
 }
 
 
@@ -130,6 +197,17 @@ TNODE *extract_smallest_node(TNODE **rootp) {
   }
   
   return p;
+}
+
+TNODE *new_node(char *name, float score) {
+  TNODE *np = (TNODE *) malloc(sizeof(TNODE));
+  if (np) {
+    strcpy(np->data.name, name);
+    np->data.score = score;
+    np->left = NULL;
+    np->right = NULL;
+  }
+  return np;
 }
 
 void clean_tree(TNODE **rootp) {
