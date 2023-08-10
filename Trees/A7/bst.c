@@ -11,40 +11,15 @@ TNODE *search(TNODE *root, char *name) {
     if (root == NULL || strcmp(root->data.name, name) == 0) {
         return root;
     }
-    
-    // each of these are recursive and search through the tree
-    TNODE *foundInLeftSubtree = search(root->left, name);
-    TNODE *foundInRightSubTree = search(root->right, name);
 
-    // once recursion is done return the appropriate search
-    if (foundInLeftSubtree != NULL) {
-        return foundInLeftSubtree;
+    if (strcmp(root->data.name, name) > 0) {
+        return search(root->right, name);
+    } else {
+        return search(root->left, name);
     }
-
-    return foundInRightSubTree;
 
     // ---------------- Iterative approach Below ---------------- //
 
-    TNODE *current = root; // store the address pointing to the node in current
-
-    // while current isn't null keep looping
-    while (current) {
-
-        if (strcmp(current->data.name, name) < 0) { // if the current name is smaller alphabetically
-            current = current->right;
-        } 
-
-        else if (strcmp(current->data.name, name) > 0) { // if the current name is larger alphabetically
-            current = current->left;
-        }
-
-        else { // match found return current node
-            return current;
-        }
-
-    }
-
-    return NULL;
 
 }
 
