@@ -148,8 +148,28 @@ TNODE *iterative_bfs(TNODE *root, int val) {
 /* this does the depth-first-search using an auxiliary stack */
 TNODE *iterative_dfs(TNODE *root, int val) {
 
-  
+  // utilize a LIFO system
+  STACK s = {0};
+  push(&s, root);
 
+  // while stack has something inside
+  while(s.top) {
+
+    // get the node at top of stack
+    TNODE *node = (TNODE*) pop(&s); 
+
+    // add nodes children to the stack
+    push(&s, node->left);
+    push(&s, node->right);
+
+    if (node->data == val) {
+      return node;
+    }
+
+  }
+  return NULL;
+
+  // Recursive method below
 }
 
 // the following functions are given, need to add to your program.
