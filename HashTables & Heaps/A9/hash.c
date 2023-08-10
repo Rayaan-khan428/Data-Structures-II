@@ -23,7 +23,7 @@ HSNODE *new_hashnode(char *key, int value) {
     newNode->value = value; // store the value
     newNode->next = NULL; // set to NULL
 
-    return newNode
+    return newNode;
 }
 
 HASHTABLE *new_hashtable(int size) {
