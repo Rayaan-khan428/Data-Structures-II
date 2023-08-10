@@ -5,8 +5,40 @@
 
 
 TNODE *search(TNODE *root, char *name) {
+    // Preforming PreOrder Search // recursive search
+    // edge case 1: no root, or root is the name
+    if (!root || strcmp(root->data.name, name) == 0) {
+        return root;
+    } 
+    
+    else {
+        if (strcmp(root->data.name, name) > 0) {
+            return search(root->left, name);
+        } 
+        
+        else if (strcmp(root->data.name, name) < 0) {
+            return search(root->right, name);
+        } 
+        
+        else {
+            return root;
+        }
+    }
+
+    // Iterative Appraoch
+
+    // while root is not NULL
+    while (root) {
+
+
+
+
+    }
+
+
 
 }
+
 
 void insert(TNODE **rootp, char *name, float score) {
     
@@ -15,7 +47,6 @@ void insert(TNODE **rootp, char *name, float score) {
 void delete(TNODE **rootp, char *name) {
 
 }
-
 
 TNODE *extract_smallest_node(TNODE **rootp) {
   TNODE *p = *rootp, *parent = NULL;
