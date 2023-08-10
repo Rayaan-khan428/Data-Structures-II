@@ -23,7 +23,7 @@ void search_info(char *sf, char *key, TNODE *tnp){
 void display_inorder_line(TNODE *root) {
   if (root) {
     if (root->left) display_inorder_line(root->left);
-    printf("%s ", root->data.name, root->data.score);
+    printf("%s", root->data.name, root->data.score);
     if (root->right) display_inorder_line(root->right);
   }
 }

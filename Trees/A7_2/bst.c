@@ -5,43 +5,90 @@
 
 
 TNODE *search(TNODE *root, char *name) {
-    // Preforming PreOrder Search // recursive search
-    // edge case 1: no root, or root is the name
-    if (!root || strcmp(root->data.name, name) == 0) {
+    // your implementation
+
+    // if the root is match or a null return it
+    if (root == NULL || strcmp(root->data.name, name) == 0) {
         return root;
-    } 
+    }
     
-    else {
-        if (strcmp(root->data.name, name) > 0) {
-            return search(root->left, name);
+    // each of these are recursive and search through the tree
+    TNODE *foundInLeftSubtree = search(root->left, name);
+    TNODE *foundInRightSubTree = search(root->right, name);
+
+    // once recursion is done return the appropriate search
+    if (foundInLeftSubtree != NULL) {
+        return foundInLeftSubtree;
+    }
+
+    return foundInRightSubTree;
+
+    // ---------------- Iterative approach Below ---------------- //
+
+    TNODE *current = root; // store the address pointing to the node in current
+
+    // while current isn't null keep looping
+    while (current) {
+
+        if (strcmp(current->data.name, name) < 0) { // if the current name is smaller alphabetically
+            current = current->right;
         } 
-        
-        else if (strcmp(root->data.name, name) < 0) {
-            return search(root->right, name);
-        } 
-        
-        else {
-            return root;
+
+        else if (strcmp(current->data.name, name) > 0) { // if the current name is larger alphabetically
+            current = current->left;
         }
-    }
 
-    // Iterative Appraoch
-
-    // while root is not NULL
-    while (root) {
-
-
-
+        else { // match found return current node
+            return current;
+        }
 
     }
 
-
+    return NULL;
 
 }
 
-
 void insert(TNODE **rootp, char *name, float score) {
     
+    TNODE *node = new_node(name, score); // Create a new node with the given name and score
+
+    if (!*rootp) { // If the root pointer is empty, i.e., the tree is empty
+        *rootp = node; // Set the root pointer to the new node
+        return; // Exit the function
+    }
+
+    TNODE *current = *rootp; // Start from the root of the tree
+
+    while (current) { // Traverse the tree until a suitable position is found
+        
+        // if name is alphabetically less than node move to left subtree
+        if (strcmp(name, current->data.name) < 0) { 
+            
+            // if current does not contain a left child, insert new node here
+            if (!current->left) { 
+                current->left = node; 
+                return; // Exit the function
+            }
+            current = current->left; // Move to the left child
+        } 
+        
+        // if name is alphabetically less than node move to left subtree
+        else if (strcmp(name, current->data.name) > 0) { // If the name is greater than the current node's name
+            
+            // if current does not contain a right child, insert new node here
+            if (!current->right) { 
+                current->right = node; // Set the right child to the new node
+                return; // Exit the function
+            }
+            current = current->right; // Move to the right child
+        } 
+        
+        
+        else { // If the names are equal
+            current->data.score = score; // Update the score of the current node
+            return; // Exit the function
+        }
+    }
 }
 
 void delete(TNODE **rootp, char *name) {
