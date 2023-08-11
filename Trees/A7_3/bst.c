@@ -137,6 +137,11 @@ void delete(TNODE **rootp, char *name) {
         // situation 3: has two children
         else {
 
+          TNODE *sucessorParent = cur;
+          TNODE *sucessorChild = cur->right;
+
+          TNODE *smallestNode = extract_smallest_node(cur);
+
           
 
         }
