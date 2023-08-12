@@ -85,6 +85,7 @@ int weight_edgelist(EDGELIST *g) {
       weight += p->weight;
       p = p->next;
     }
+    
 }
 
 void clean_edgelist(EDGELIST **gp) {
