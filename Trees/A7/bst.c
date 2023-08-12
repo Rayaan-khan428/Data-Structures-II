@@ -106,7 +106,9 @@ void delete(TNODE **rootp, char *name) {
         }
         free(current);
         current = NULL; // Prevent dangling pointer
-    } else if ((current->left) != (current->right)) {
+    } 
+    
+    else if ((current->left) != (current->right)) {
         TNODE *child;
         if (current->left == NULL) {
             child = current->right;
@@ -124,7 +126,9 @@ void delete(TNODE **rootp, char *name) {
         }
         free(current);
         current = NULL; // Prevent dangling pointer
-    } else {
+    } 
+    
+    else {
         TNODE *minNode = extract_smallest_node(&(current->right));
 
         // If the left child is the minimum of the two 

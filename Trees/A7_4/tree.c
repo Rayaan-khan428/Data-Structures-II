@@ -53,12 +53,11 @@ TPROPS get_props(TNODE *root) {
 /* this displays the node data of the tree in pre-order. */
 void display_preorder(TNODE *root) {
 
+  // root - left - right
   if (root) {
-
-    printf("%c ", root->data);
+    printf("%d", root->data);
     display_preorder(root->left);
     display_preorder(root->right);
-
   }
 
 }
@@ -66,25 +65,25 @@ void display_preorder(TNODE *root) {
 /* this displays the node data of the tree in in-order. */
 void display_inorder(TNODE *root) {
 
+  // left - root - right
   if (root) {
-
-    display_preorder(root->left);
-    printf("%c ", root->data);
-    display_preorder(root->right);
-
+    
+    display_inorder(root->left);
+    printf("%d", root->data);
+    display_inorder(root->right);
   }
-
 }
 
 /* this displays the node data of the tree in post-order. */
 void display_postorder(TNODE *root) {
 
+  // left - right - right
   if (root) {
-
-    display_preorder(root->left);
-    display_preorder(root->right);
-    printf("%c ", root->data);
-
+    
+    display_postorder(root->left);
+    display_postorder(root->right);
+    printf("%d", root->data);
+    
   }
 
 }
@@ -95,20 +94,22 @@ void display_bforder(TNODE *root) {
 
   // iterative only | one level at a time | use a QUEUE
 
-  QUEUE q = {0}; // initialize an empty queue
-  enqueue(&q, root); // add the root to the queue
+  // initialize queue
+  QUEUE *q = {0};
+  enqueue(&q, root);
 
-  // while queue isn't empty
-  while (q.front) {
-    // initialize a pointer that points to the node that is dequeued
-    TNODE *node = (TNODE*) dequeue(&q);
+  while (q->front) {
 
-    // queue up the kids
-    enqueue(&q,node->left);
-    enqueue(&q,node->right);
+    // dequeue and store results
+    TNODE *temp = (TNODE*) dequeue(&q);
 
-    // print it
-    printf("%c ",node->data);
+    // add its children to the queue
+    enqueue(&q, temp->left);
+    enqueue(&q, temp->right);
+
+    // print the root
+    printf("%c", temp->data);
+
   }
 
 }
@@ -117,26 +118,28 @@ void display_bforder(TNODE *root) {
 /* use auxiliary queue data structure for the algorithm  */
 TNODE *iterative_bfs(TNODE *root, int val) {
 
-  QUEUE q = {0}; // initialize an empty queue
-  enqueue(&q, root); // add the root to the queue
+  if (root == NULL) {
+    return NULL;
+  }
 
-  while (q.front) {
+  QUEUE *q = {0};
+  enqueue(&q, root);
+
+  while (q->front) {
 
     TNODE *node = (TNODE*) dequeue(&q);
-    
-    // queue up the kids
-    enqueue(&q,node->left);
-    enqueue(&q,node->right);
 
-    // search
+    // check if it's a match
     if (node->data == val) {
       return node;
+    } else {
+      // add its children to the queue
+      enqueue(&q, node->left);
+      enqueue(&q, node->right);
     }
 
   }
-
-  return NULL;
-
+  return NULL
 }
 
 /* this does the depth-first-search using an auxiliary stack */
@@ -144,19 +147,28 @@ TNODE *iterative_dfs(TNODE *root, int val) {
 
   // Utilise a stack | depth first search | subtree
 
-  STACK s = {0}; // intiialize an empty stack
-  push(&s, root); // add the root to the stack
+  if (root == NULL) {
+    return NULL;
+  }
 
-  // while stack isn't empty
-  while (s.top) {
-    TNODE* node = (TNODE*) pop(&s);
+  // add first element to the stack
+  STACK *s = {s};
+  push(&s, root);
 
+  while (s->top) {
+
+    // store node
+    TNODE *node = (TNODE*) pop(&s);
+
+    // store its children
     push(&s, node->left);
     push(&s, node->right);
 
+    // check if it's a match
     if (node->data == val) {
       return node;
-    }
+    } 
+
   }
   return NULL;
 }

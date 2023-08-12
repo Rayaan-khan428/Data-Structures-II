@@ -95,7 +95,7 @@ void delete(TNODE **rootp, char *name) {
           // has parent but no children
           else {
             
-            if (parent->left = cur) {
+            if (parent->left == cur) {
               parent->left = NULL;
             } else {
               parent->right = NULL;
@@ -109,7 +109,7 @@ void delete(TNODE **rootp, char *name) {
 
           // determine the child node
           TNODE *child;
-          if (cur->left = NULL) {
+          if (cur->left == NULL) {
             child = cur->right;
           } else {
             child = cur->left;
@@ -123,7 +123,7 @@ void delete(TNODE **rootp, char *name) {
           // has a parent and one child
           else {
 
-            if (parent->left = cur) {
+            if (parent->left == cur) {
               parent->left = child;
             } else {
               parent->right = child;
