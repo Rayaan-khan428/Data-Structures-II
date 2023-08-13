@@ -84,30 +84,40 @@ HNODE extract_min(HEAP *heap)
 
 int change_key(HEAP *heap, int index, KEYTYPE new_key)
 {
+    // Check if the index is within valid bounds
     if (index < 0 || index >= heap->size)
         return 0;
 
-    if (cmp(new_key, heap->hna[index].key) > 0)
+    // Compare the new key with the existing key at the given index
+    int cmp_result = cmp(new_key, heap->hna[index].key);
+
+    // If the new key is greater than the existing key, modify the key and perform heapify down
+    if (cmp_result > 0)
     {
         heap->hna[index].key = new_key;
-        heapify_down(heap, index);
+        heapify_down(heap, index);  // Restore the min-heap property downwards
     }
-    else if (cmp(new_key, heap->hna[index].key) < 0)
+    // If the new key is smaller than the existing key, modify the key and perform heapify up
+    else if (cmp_result < 0)
     {
         heap->hna[index].key = new_key;
-        heapify_up(heap, index);
+        heapify_up(heap, index);  // Restore the min-heap property upwards
     }
 
-    return 1;
+    return 1;  // Key change and heap restructuring were successful
 }
 
 int find_data_index(HEAP *heap, DATA data)
 {
+    // Iterate through each element in the heap
     for (int i = 0; i < heap->size; i++)
     {
+        // Check if the data value of the current element matches the target data
         if (heap->hna[i].data == data)
-            return i;
+            return i;  // Return the index of the element with matching data
     }
+
+    // If no element with matching data is found, return -1
     return -1;
 }
 
