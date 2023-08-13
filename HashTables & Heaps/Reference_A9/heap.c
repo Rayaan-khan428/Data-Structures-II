@@ -206,4 +206,4 @@ void heap_swap(HEAPNODE *a, HEAPNODE *b) {
 	HEAPNODE temp = *a;
     *a = *b;
     *b = temp;
-  }
+}

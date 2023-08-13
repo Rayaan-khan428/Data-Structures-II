@@ -134,7 +134,6 @@ void breadthFirstTraversal(GRAPH *graph, int startVertex) {
     clean_queue(&vertexQueue);
 }
 
-
 void display_dforder(GRAPH *g, int start) {
     
     // your implementation
@@ -174,7 +173,6 @@ void display_dforder(GRAPH *g, int start) {
             }
             neighbor = neighbor->next;
         }
-
     }
 }
 

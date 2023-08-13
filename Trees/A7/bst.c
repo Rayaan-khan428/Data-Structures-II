@@ -5,23 +5,21 @@
 
 
 TNODE *search(TNODE *root, char *name) {
-    // your implementation
-
-    // if the root is match or a null return it
+    // Base case: If the root is NULL or the name matches, return the root
     if (root == NULL || strcmp(root->data.name, name) == 0) {
         return root;
     }
 
-    if (strcmp(root->data.name, name) > 0) {
+    // If the name is greater than the root's name, search in the right subtree
+    if (strcmp(root->data.name, name) < 0) {
         return search(root->right, name);
-    } else {
+    }
+    // If the name is less than the root's name, search in the left subtree
+    else {
         return search(root->left, name);
     }
-
-    // ---------------- Iterative approach Below ---------------- //
-
-
 }
+
 
 void insert(TNODE **rootp, char *name, float score) {
     

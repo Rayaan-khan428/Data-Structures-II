@@ -163,6 +163,34 @@ TNODE *iterative_dfs(TNODE *root, int val) {
   return NULL;
 }
 
+TNODE *recursive_dfs(TNODE *node, int val) {
+  
+  // Base case: if the current node is NULL, return NULL
+  if (node == NULL) {
+    return NULL;
+  }
+
+  // Check if the current node's data matches the target value
+  if (node->data == val) {
+    return node;
+  }
+
+  // Recursively search in the left subtree
+  TNODE *leftResult = recursive_dfs(node->left, val);
+  if (leftResult) {
+    return leftResult; // Return if found in the left subtree
+  }
+
+  // Recursively search in the right subtree
+  TNODE *rightResult = recursive_dfs(node->right, val);
+  if (rightResult) {
+    return rightResult; // Return if found in the right subtree
+  }
+
+  return NULL; // Return NULL if not found in this subtree
+}
+
+
 // the following functions are given, need to add to your program.
 void clean_tree(TNODE **rootp) {
   TNODE *p = *rootp;
