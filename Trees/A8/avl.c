@@ -1,119 +1,85 @@
-#include<stdio.h>
-#include<stdlib.h>
-#include<string.h>
-#include "avl.h"
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 
-// help functions
+typedef struct {
+    char name[100];
+    float score;
+} DATA;
+
+typedef struct TNODE {
+    DATA data;
+    int height;
+    struct TNODE *left;
+    struct TNODE *right;
+} TNODE;
+
 TNODE *extract_smallest_node(TNODE **rootp);
-max(int a, int b);
+int max(int a, int b);
 
-// this is a help function for balance factor.
-int height(TNODE *np)
-{
-    // your implementation
+int height(TNODE *np) {
+    if (np == NULL) {
+        return -1;
+    }
+    
+    int left_height = height(np->left);
+    int right_height = height(np->right);
+    
+    return 1 + (left_height > right_height ? left_height : right_height);
 }
 
-int balance_factor(TNODE* np) {
-    // your implementation
+int balance_factor(TNODE* node) {
+    if (node == NULL) {
+        return 0;
+    }
+    
+    int left_subtree_height = height(node->left);
+    int right_subtree_height = height(node->right);
+    
+    return left_subtree_height - right_subtree_height;
 }
 
 int is_avl(TNODE *root) {
-    // your implementation
-}
-
-TNODE *rotate_right(TNODE *y)
-{
-    // your implementation
-}
-
-TNODE *rotate_left(TNODE *x)
-{
-    // your implementation
-}
-
-void insert(TNODE **rootp, char *name, float score)
-{
-  TNODE *np = (TNODE *) malloc(sizeof(TNODE));
-  if (np == NULL) return;
-  strcpy(np->data.name, name);
-  np->data.score = score;
-  np->height = 1;
-  np->left = NULL;
-  np->right = NULL;
-  
-  // 1. Perform the normal BST insertion
-  if (*rootp == NULL) {
-    *rootp = np;
-    return;
-  }
-  
-  TNODE *root = *rootp;
-  if (strcmp(name, root->data.name) < 0 )
-    insert(&root->left, name, score);
-  else if (strcmp(name, root->data.name) > 0 )
-    insert(&root->right, name, score);
-  else return ;
-
-  // 2. update height of this root node
- 
-  // 3. Get the balance factor of this ancestor node to check whether this node became unbalanced
-  
-  // 4. re-balance if not balanced
-      
-}
-
-void delete(TNODE **rootp, char *name)
-{
-  TNODE *root = *rootp;
-  TNODE* np;
-
-  if (root == NULL) return;
-
-  if (strcmp(name, root->data.name) == 0) {
-    if (root->left == NULL && root->right == NULL) {
-      free(root);
-      *rootp = NULL;
-    } else if (root->left != NULL && root->right == NULL) {
-      np = root->left;
-      free(root);
-      *rootp = np;
-    } else if (root->left == NULL && root->right != NULL) {
-      np = root->right;
-      free(root);
-      *rootp = np;
-    } else if (root->left != NULL && root->right != NULL) {
-      np = extract_smallest_node(&root->right);
-      np->left = root->left;
-      np->right = root->right;
-      free(root);
-      *rootp = np;
+    if (root == NULL) {
+        return 1;
     }
-  } else {
-    if (strcmp(name, root->data.name) < 0) {
-      delete(&root->left, name);
-    } else {
-      delete(&root->right, name);
+    int bf = balance_factor(root);
+    if (abs(bf) >= 2 || is_avl(root->left) == 0 || is_avl(root->right) == 0) {
+        return 0;
     }
-  }
-
-    // If the tree had only one node then return
-  if (*rootp == NULL) return;
-
-  root = *rootp;
-  
-  // 2: update the this root node's height
- 
-  // 3: get the balance factor of this root node
- 
-  // 4: re-balance if not balanced
-
+    return 1;
 }
 
+TNODE *rotate_right(TNODE *y) {
+    TNODE *x = y->left;
+    TNODE *temp = x->right;
 
-// You are allowed to use the following functions
-int max(int a, int b)
-{
-  return (a > b)? a : b;
+    x->right = y;
+    y->left = temp;
+
+    y->height = max(height(y->left), height(y->right)) + 1;
+    x->height = max(height(x->left), height(x->right)) + 1;
+
+    return x; // New root of the rotated subtree
+}
+
+TNODE *rotate_left(TNODE *x) {
+    TNODE *y = x->right;
+    TNODE *temp = y->left;
+
+    y->left = x;
+    x->right = temp;
+
+    x->height = max(height(x->left), height(x->right)) + 1;
+    y->height = max(height(y->left), height(y->right)) + 1;
+
+    return y; // New root of the rotated subtree
+}
+
+// Other functions (insert, delete, etc.) need to be completed.
+
+int max(int a, int b) {
+    return (a > b) ? a : b;
 }
 
 TNODE *extract_smallest_node(TNODE **rootp) {
