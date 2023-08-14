@@ -3,96 +3,94 @@
 #include "heap.h"
 #include "algorithm.h"
 
-EDGELIST *mst_prim(GRAPH *g, int start) {
+EDGELIST *minimum_spanning_tree_prim(GRAPH *graph, int start_vertex) {
     
     // Check if the input graph is NULL
-    if (g == NULL){
+    if (graph == NULL){
         return NULL;
     }
 
-    int i, index, n = g->order, T[n], parent[n];
+    int vertex_count = graph->order;
+    int vertex_indices[vertex_count]; // To keep track of vertex inclusion in MST
+    int parent[vertex_count]; // Store parent of each vertex in the MST
 
-    // Initialize arrays T and parent
-    // T[i] will be 1 if vertex i is included in the minimum spanning tree, 0 otherwise.
-    // parent[i] will store the parent of vertex i in the minimum spanning tree.
-    for (i = 0; i < n; i += 1) {
-        T[i] = 0;    // Mark all vertices as not included in MST
+    // Initialize arrays to keep track of included vertices and their parents
+    for (int i = 0; i < vertex_count; i++) {
+        vertex_indices[i] = 0; // Initially, no vertices are included in MST
+        parent[i] = -1; // Initialize parent array with -1 (indicating no parent)
     }
 
-    for (i = 0; i < n; i += 1) {
-        parent[i] = -1;   // Initialize parent array with -1 (indicating no parent)
-    }
+    // Prepare the heap with the neighbors of the starting vertex
+    HEAPNODE heap_node;
+    HEAP *heap = new_heap(4);
+    ADJNODE *neighbor = graph->nodes[start_vertex]->neighbor;
 
-    // Create a new heap and prepare it with the neighbors of the starting vertex 'start'
-    HEAPNODE hn;
-    HEAP *h = new_heap(4);
-    ADJNODE *temp = g->nodes[start]->neighbor;
+    vertex_indices[start_vertex] = 1; // Mark the starting vertex as included in MST
 
-    T[start] = 1;   // Mark the starting vertex as included in MST
-
-    while (temp) {
-        hn.key = temp->weight;
-        hn.data = temp->nid;
+    while (neighbor) {
+        heap_node.key = neighbor->weight;
+        heap_node.data = neighbor->nid;
 
         // Insert the neighbor node into the heap along with its weight as the key
-        insert(h, hn);
+        insert(heap, heap_node);
 
         // Set the parent of the neighbor to be the starting vertex
-        parent[temp->nid] = start;
+        parent[neighbor->nid] = start_vertex;
 
-        temp = temp->next;
+        neighbor = neighbor->next;
     }
 
     // Create a new EDGELIST to store the resulting MST
     EDGELIST *mst = new_edgelist();
 
-    // Loop until the heap is empty (all vertices are included in the MST)
-    while (h->size > 0) {
+    // Continue until all vertices are included in the MST
+    while (heap->size > 0) {
         // Extract the node with the minimum weight from the heap
-        hn = extract_min(h);
-        i = hn.data;
+        heap_node = extract_min(heap);
+        int extracted_vertex = heap_node.data;
 
-        T[i] = 1;   // Mark the extracted vertex as included in MST
+        vertex_indices[extracted_vertex] = 1; // Mark the extracted vertex as included in MST
 
         // Add an edge to the MST between the parent of the extracted vertex and the vertex itself
-        add_edge_end(mst, parent[i], i, hn.key);
+        add_edge_end(mst, parent[extracted_vertex], extracted_vertex, heap_node.key);
 
-        temp = g->nodes[i]->neighbor;
+        neighbor = graph->nodes[extracted_vertex]->neighbor;
 
-        // Explore all neighbors of the extracted vertex
-        while (temp) {
-            index = find_data_index(h, temp->nid);
+        // Explore neighbors of the extracted vertex
+        while (neighbor) {
+            int neighbor_index = find_data_index(heap, neighbor->nid);
 
             // If the neighbor node is in the heap
-            if (index >= 0) {
-                // Check if it is not yet included in MST and the weight from the extracted vertex to this neighbor is smaller
-                if (T[temp->nid] == 0 && temp->weight < h->hna[index].key) {
-                    // Update the key (weight) in the heap for this neighbor
-                    change_key(h, index, temp->weight);
+            if (neighbor_index >= 0) {
+                // Check if it's not yet included in MST and the weight from extracted vertex is smaller
+                if (!vertex_indices[neighbor->nid] && neighbor->weight < heap->hna[neighbor_index].key) {
+                    // Update the weight in the heap for this neighbor
+                    change_key(heap, neighbor_index, neighbor->weight);
                     // Set the parent of this neighbor to be the extracted vertex
-                    parent[temp->nid] = i;
+                    parent[neighbor->nid] = extracted_vertex;
                 }
             }
             else {
                 // If the neighbor node is not in the heap and not yet included in MST
-                if (T[temp->nid] == 0) {
-                    hn.key = temp->weight;
-                    hn.data = temp->nid;
+                if (!vertex_indices[neighbor->nid]) {
+                    heap_node.key = neighbor->weight;
+                    heap_node.data = neighbor->nid;
 
                     // Insert the neighbor node into the heap along with its weight as the key
-                    insert(h, hn);
+                    insert(heap, heap_node);
 
                     // Set the parent of this neighbor to be the extracted vertex
-                    parent[temp->nid] = i;
+                    parent[neighbor->nid] = extracted_vertex;
                 }
             }
-            temp = temp->next;
+            neighbor = neighbor->next;
         }
     }
 
     // Return the resulting MST as an EDGELIST
     return mst;
 }
+
 
 EDGELIST *spt_dijkstra(GRAPH *g, int start) {
     // Check if the input graph is NULL

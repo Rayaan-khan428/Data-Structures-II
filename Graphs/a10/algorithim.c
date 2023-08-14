@@ -3,26 +3,35 @@
 #include "heap.h"
 #include "algorithm.h"
 
-EDGELIST *mst_prim(GRAPH *g, int start) {
+EDGELIST *mst_prim(GRAPH *graph, int start_vertex) {
+    
     // your implementation
-
-    // ensure input graph is not empty
-    if (g == NULL) {
+    if (graph == NULL) {
         return NULL;
     }
 
-    int index;
-    int n = g->order;
-    int T[n]; 
-    int parent[n];
-    
-    for (int i=0; i<n; i+=1) {
-        T[i] = 0; // mark all verticies as not in our MST
+    int vertex_count = graph->order; 
+    int vertex_indices[vertex_count]; // keep track of vertex inclusion in MST
+    int parent[vertex_count]; // store parent of each vertex in the MST
+
+    for (int i=0; i<vertex_count; i++) {
+        vertex_indices[i] = 0;
+        parent[i] = -1;
     }
 
-    for (int i=0; i<n; i+= 1) {
-        parent[i] = -1; // initialize parent array w -1 to indicate no parent
+    HNODE heap_node;
+    HEAP *heap = new_heap(4);
+    ADJNODE *neighbor = graph->nodes[start_vertex]->neighbor;
+
+    vertex_indices[start_vertex] = 1; // mark the startin vertex as included
+
+    while(neighbor) {
+        heap_node.key = neighbor->weight;
+        heap_node.data = neighbor->nid;
+
+        // insert the neighbor node into the heap along with its weight as the key
     }
+    
 
 }
 
