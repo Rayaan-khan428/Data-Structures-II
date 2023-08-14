@@ -1,6 +1,7 @@
 {
     "files.associations": {
         "string.h": "c",
-        "queue_stack.h": "c"
+        "queue_stack.h": "c",
+        "algorithm.h": "c"
     }
 }

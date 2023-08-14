@@ -83,6 +83,9 @@ HSNODE *search(HASHTABLE *ht, char *key) {
         }
         cur = cur->next;
     }
+
+    // not found
+    return NULL;
 }
 
 int insert(HASHTABLE *ht, HSNODE *np) {
@@ -100,7 +103,7 @@ int insert(HASHTABLE *ht, HSNODE *np) {
     int i = hash(np->key);
 
     HSNODE *prev = NULL;
-    HSNODE *cur = ht->hna[i]->key;
+    HSNODE *cur = ht->hna[i];
 
     if (cur == NULL) {
         ht->hna[i] = np;
@@ -122,7 +125,7 @@ int insert(HASHTABLE *ht, HSNODE *np) {
         }
 
         if (prev == NULL) {
-            ht->hna = np;
+            ht->hna[i] = np;
         }
 
         else {
@@ -151,7 +154,7 @@ int delete(HASHTABLE *ht, char *key) {
     int i = hash(key);
 
     HSNODE *prev = NULL;
-    HSNODE *cur = ht->hna[i]->key;
+    HSNODE *cur = ht->hna[i];
 
     while (!cur) {
 
@@ -173,6 +176,8 @@ int delete(HASHTABLE *ht, char *key) {
         cur = cur->next;
 
     }
+
+    return 0;
 
 }
 
