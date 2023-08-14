@@ -23,7 +23,6 @@ HSNODE *new_hashnode(char *key, int value) {
     node->next = NULL;
 
     return node;
-
 }
 
 HASHTABLE *new_hashtable(int size) {

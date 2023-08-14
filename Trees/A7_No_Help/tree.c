@@ -4,7 +4,6 @@
  
 #include <stdio.h>
 #include <stdlib.h>
-#include <math.h>
 #include "queue_stack.h"
 #include "tree.h"
 
@@ -39,7 +38,7 @@ TPROPS get_props(TNODE *root) {
 
     // Calculate the height of the current subtree by taking the maximum height of its left and right subtrees,
     // and adding 1 for the current node.
-    props.height = 1 + (left_props.height > right_props.height ? left_props.height : right_props.height);
+    props.height = 1 + max(left_props.height, right_props.height);
     
     // Calculate the total number of nodes in the current subtree by adding the number of nodes in its left
     // and right subtrees, and adding 1 for the current node.
@@ -52,39 +51,25 @@ TPROPS get_props(TNODE *root) {
 
 /* this displays the node data of the tree in pre-order. */
 void display_preorder(TNODE *root) {
-
-  // root - left - right
-  if (root) {
-    printf("%d", root->data);
-    display_preorder(root->left);
-    display_preorder(root->right);
-  }
+    
+    // your implementation
 
 }
 
 /* this displays the node data of the tree in in-order. */
 void display_inorder(TNODE *root) {
 
-  // left - root - right
-  if (root) {
-    
-    display_inorder(root->left);
-    printf("%d", root->data);
-    display_inorder(root->right);
-  }
+    // your implementation
+    if (root) {
+
+
+
 }
 
 /* this displays the node data of the tree in post-order. */
 void display_postorder(TNODE *root) {
 
-  // left - right - right
-  if (root) {
-    
-    display_postorder(root->left);
-    display_postorder(root->right);
-    printf("%d", root->data);
-    
-  }
+  
 
 }
 
@@ -92,86 +77,24 @@ void display_postorder(TNODE *root) {
 /* use auxiliary queue data structure for the algorithm  */
 void display_bforder(TNODE *root) {
 
-  // iterative only | one level at a time | use a QUEUE
 
-  // initialize queue
-  QUEUE *q = {0};
-  enqueue(&q, root);
-
-  while (q->front) {
-
-    // dequeue and store results
-    TNODE *temp = (TNODE*) dequeue(&q);
-
-    // add its children to the queue
-    enqueue(&q, temp->left);
-    enqueue(&q, temp->right);
-
-    // print the root
-    printf("%c", temp->data);
-
-  }
 
 }
 
 /* this does the breadth-first-search using an auxiliary queue. */
 /* use auxiliary queue data structure for the algorithm  */
 TNODE *iterative_bfs(TNODE *root, int val) {
+    
 
-  if (root == NULL) {
-    return NULL;
-  }
 
-  QUEUE *q = {0};
-  enqueue(&q, root);
-
-  while (q->front) {
-
-    TNODE *node = (TNODE*) dequeue(&q);
-
-    // check if it's a match
-    if (node->data == val) {
-      return node;
-    } else {
-      // add its children to the queue
-      enqueue(&q, node->left);
-      enqueue(&q, node->right);
-    }
-
-  }
-  return NULL
 }
 
 /* this does the depth-first-search using an auxiliary stack */
 TNODE *iterative_dfs(TNODE *root, int val) {
 
-  // Utilise a stack | depth first search | subtree
 
-  if (root == NULL) {
-    return NULL;
-  }
-
-  // add first element to the stack
-  STACK *s = {s};
-  push(&s, root);
-
-  while (s->top) {
-
-    // store node
-    TNODE *node = (TNODE*) pop(&s);
-
-    // store its children
-    push(&s, node->left);
-    push(&s, node->right);
-
-    // check if it's a match
-    if (node->data == val) {
-      return node;
-    } 
-
-  }
-  return NULL;
 }
+
 
 // the following functions are given, need to add to your program.
 void clean_tree(TNODE **rootp) {
