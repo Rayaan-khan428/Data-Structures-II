@@ -40,7 +40,6 @@ HASHTABLE *new_hashtable(int size) {
     ht->size = size;
     ht->count = 0;
     
-
 }
 
 HSNODE *search(HASHTABLE *ht, char *key) { 
@@ -121,8 +120,6 @@ int insert(HASHTABLE *ht, HSNODE *np) {
 
 int delete(HASHTABLE *ht, char *key) {
     
-    // your implementation
-    
     // hashing
     int i = hash(key);
 
@@ -130,29 +127,28 @@ int delete(HASHTABLE *ht, char *key) {
     HSNODE *prev = NULL;
     HSNODE *cur = ht->hna[i];
 
-    while (!cur) {
+    while (cur != NULL) {  // Fix the loop condition
 
         if (strcmp(cur->key, key) == 0) {
 
             if (prev == NULL) {
-                ht->hna[0] = cur->next;
+                ht->hna[i] = cur->next;
             } else {
                 prev->next = cur->next;
                 free(cur);
             }
 
-            free(cur);
-            ht->count--;
+            ht->count--;  // Decrement the count of elements
             return 1;
-
         }
 
         prev = cur;
         cur = cur->next;
-
     }
 
+    return 0;  // Return 0 if the key was not found
 }
+
 
 
 void clean_hash(HASHTABLE **htp) {
