@@ -85,72 +85,63 @@ void add_edge(GRAPH *g, int from, int to, int weight) {
 // Displays vertices of the graph in breadth-first order starting from the vertex 'start'
 void display_bforder(GRAPH *g, int start) {
 
-    // Create a QUEUE to store vertices to visit in the breadth-first order
+    if (g == NULL) {
+        return;  // Nothing to display if the graph is NULL
+    }
+
+    int num_vertices = g->order;
+    int visited[num_vertices];
+    for (int i = 0; i < num_vertices; i++) {
+        visited[i] = 0;  // Initialize all vertices as unvisited
+    }
+
+    // Create a queue to store vertices to visit in breadth-first order
     QUEUE queue = {0};
 
-    // Variables to store the current vertex and its neighbors
-    GNODE *gnp = NULL;
-    ADJNODE *anp = NULL;
+    enqueue(&queue, g->nodes[start]);  // Enqueue the starting vertex
+    visited[start] = 1;  // Mark the starting vertex as visited
 
-    // Check if the graph is NULL, and if so, return (nothing to display)
-    if (g == NULL) {
-        return;
-    }
-
-    // Create an array to keep track of visited vertices
-    int n = g->order, visited[n], i;
-    for (i = 0; i < n; i += 1) {
-        visited[i] = 0;   // Mark all vertices as unvisited
-    }
-
-    // Enqueue the starting vertex into the queue
-    enqueue(&queue, g->nodes[start]);
-
-    // Mark the starting vertex as visited
-    visited[start] = 1;
-
-    // Perform breadth-first traversal using the queue
     while (queue.front) {
-        gnp = (GNODE*)dequeue(&queue);  // Dequeue a vertex from the queue
-        printf("%d ", gnp->nid);        // Process the current vertex (print its ID)
+        GNODE *current_vertex = (GNODE*)dequeue(&queue);
+        printf("%d ", current_vertex->nid);  // Process the current vertex (print its ID)
 
         // Explore all neighbors (adjacent vertices) of the current vertex
-        ADJNODE *p = gnp->neighbor;
+        ADJNODE *neighbor = current_vertex->neighbor;
 
-        while (p) {
-            if (!visited[p->nid]) {
-                enqueue(&queue, g->nodes[p->nid]);  // Enqueue unvisited neighbor
-                visited[p->nid] = 1;                // Mark neighbor as visited
+        while (neighbor) {
+            int neighbor_id = neighbor->nid;
+
+            if (!visited[neighbor_id]) {
+                enqueue(&queue, g->nodes[neighbor_id]);  // Enqueue unvisited neighbor
+                visited[neighbor_id] = 1;  // Mark neighbor as visited
             }
-            p = p->next;  // Move to the next neighbor in the linked list
+
+            neighbor = neighbor->next;  // Move to the next neighbor in the linked list
         }
     }
 
-    // Clean up the queue after traversal
-    clean_queue(&queue);
+    clean_queue(&queue);  // Clean up the queue after traversal
 }
 
 
 // Displays vertices of the graph in depth-first order starting from the vertex 'start'
 void display_dforder(GRAPH *g, int start) {
-
-    // Create a STACK to store vertices to visit in the depth-first order
+    // Create a STACK to store vertices for depth-first order traversal
     STACK stack = {0};
 
     // Variables to store the current vertex and its neighbors
-    GNODE *gnp = NULL;
-    ADJNODE *anp = NULL;
+    GNODE *current_vertex = NULL;
+    ADJNODE *current_neighbor = NULL;
 
     // Check if the graph is NULL, and if so, return (nothing to display)
     if (g == NULL) {
         return;
     }
 
-    // Create an array to keep track of visited vertices
-    int n = g->order, visited[n], i;
-
-    for (i = 0; i < n; i += 1) {
-        visited[i] = 0;   // Mark all vertices as unvisited
+    int num_vertices = g->order;
+    int visited[num_vertices];
+    for (int i = 0; i < num_vertices; i++) {
+        visited[i] = 0;  // Mark all vertices as unvisited
     }
 
     // Push the starting vertex onto the stack
@@ -161,25 +152,26 @@ void display_dforder(GRAPH *g, int start) {
 
     // Perform depth-first traversal using the stack
     while (stack.top) {
-
-        gnp = (GNODE*)stack.top->data;
-        pop(&stack);   // Pop the top vertex from the stack
-        printf("%d ", gnp->nid);   // Process the current vertex (print its ID)
+        current_vertex = (GNODE*)stack.top->data;
+        pop(&stack);  // Pop the top vertex from the stack
+        printf("%d ", current_vertex->nid);  // Process the current vertex (print its ID)
 
         // Explore all neighbors (adjacent vertices) of the current vertex
-        ADJNODE *p = gnp->neighbor;
-        while (p) {
-            if (!visited[p->nid]) {
-                push(&stack, g->nodes[p->nid]);  // Push unvisited neighbor onto the stack
-                visited[p->nid] = 1;   // Mark neighbor as visited
+        current_neighbor = current_vertex->neighbor;
+        while (current_neighbor) {
+            int neighbor_id = current_neighbor->nid;
+            if (!visited[neighbor_id]) {
+                push(&stack, g->nodes[neighbor_id]);  // Push unvisited neighbor onto the stack
+                visited[neighbor_id] = 1;  // Mark neighbor as visited
             }
-            p = p->next;   // Move to the next neighbor in the linked list
+            current_neighbor = current_neighbor->next;  // Move to the next neighbor in the linked list
         }
     }
 
     // Clean up the stack after traversal
     clean_stack(&stack);
 }
+
 
 
 int get_weight(GRAPH *g, int from, int to) {
