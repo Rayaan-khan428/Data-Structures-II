@@ -177,7 +177,6 @@ void display_dforder(GRAPH *g, int start) {
 
         neighboringVerticies = neighboringVerticies->next;
 
-
       }
 
 
